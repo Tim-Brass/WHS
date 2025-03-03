@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tab Rotator - Debug Mode</title>
+    <title>Tab Rotator - Debug Fix</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,80 +16,28 @@
             cursor: pointer;
         }
     </style>
-    <script>
-        let websites = [
-            { url: "https://www.example.com", duration: 5000, reloadInterval: 10000 },
-            { url: "https://www.wikipedia.org", duration: 5000, reloadInterval: 10000 }
-        ];
-
-        let tabWindows = [];
-        let currentIndex = 0;
-        let popupsBlocked = false;
-
-        function openTabs() {
-            console.log("📢 Proberen tabs te openen...");
-            document.documentElement.requestFullscreen().catch(err => console.log("⚠️ Fullscreen niet toegestaan:", err));
-
-            websites.forEach((site, index) => {
-                setTimeout(() => {
-                    let newTab = window.open(site.url, "_blank");
-                    
-                    if (newTab) {
-                        tabWindows.push({ tab: newTab, ...site });
-                        console.log(`✅ Tab geopend: ${site.url}`);
-                    } else {
-                        popupsBlocked = true;
-                        console.log(`🚨 Pop-up geblokkeerd: ${site.url}`);
-                    }
-
-                    if (tabWindows.length === websites.length) {
-                        if (!popupsBlocked) {
-                            console.log("✅ Alle tabs geopend, start rotatie...");
-                            setTimeout(rotateTabs, websites[0].duration);
-                        } else {
-                            alert("⚠️ Pop-ups geblokkeerd! Sta pop-ups toe en probeer opnieuw.");
-                        }
-                    }
-                }, index * 500);
-            });
-        }
-
-        function rotateTabs() {
-            if (tabWindows.length === 0) {
-                console.log("❌ Geen tabbladen om te roteren.");
-                return;
-            }
-
-            let activeTab = tabWindows[currentIndex];
-
-            if (activeTab.tab.closed) {
-                alert("🚨 Een tabblad is gesloten! Start opnieuw.");
-                console.log(`🚨 Gesloten tab: ${activeTab.url}`);
-                return;
-            }
-
-            setTimeout(() => {
-                activeTab.tab.focus();
-                console.log(`🔄 Wisselen naar tab: ${activeTab.url}`);
-            }, 100);
-
-            if (activeTab.reloadInterval) {
-                setTimeout(() => {
-                    console.log(`🔃 Herladen: ${activeTab.url}`);
-                    activeTab.tab.location.reload();
-                }, activeTab.reloadInterval);
-            }
-
-            currentIndex = (currentIndex + 1) % tabWindows.length;
-            setTimeout(rotateTabs, tabWindows[currentIndex].duration);
-        }
-
-        document.getElementById("startBtn").addEventListener("click", openTabs);
-    </script>
 </head>
 <body>
-    <h1>Tab Rotator - Debug Mode</h1>
+    <h1>Tab Rotator - Debug Fix</h1>
     <button id="startBtn">Start Rotatie</button>
     <p>Klik op "Start Rotatie" om te beginnen.</p>
-</body>
-</html>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("✅ DOM geladen, script kan worden uitgevoerd!");
+
+            let startButton = document.getElementById("startBtn");
+            if (!startButton) {
+                console.error("❌ Fout: Kan 'startBtn' niet vinden!");
+                return;
+            }
+
+            startButton.addEventListener("click", function () {
+                alert("✅ Startknop werkt! Nu kunnen we tabbladen openen.");
+                console.log("🔄 Startknop geklikt, functie wordt uitgevoerd...");
+                openTabs();
+            });
+
+            let websites = [
+                { url: "https://www.example.com", duration: 5000, reloadInterval: 10000 },
+                { url: "https://www.wikipedia.org", duration: 500
