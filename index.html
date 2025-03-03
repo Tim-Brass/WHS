@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tab Rotator - Edge & Chrome Fix</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        let websites = [
+            { url: "https://app.powerbi.com/reportEmbed?reportId=2c6fa881-b706-42af-8080-3a569e49eec5&autoAuth=true", duration: 15000, reloadInterval: 60000 },
+            { url: "https://app.powerbi.com/reportEmbed?reportId=741b15b7-9bdd-4523-83d0-b3dac821b038&autoAuth=true", duration: 10000, reloadInterval: 60000 },
+            { url: "https://app.powerbi.com/reportEmbed?reportId=98193132-883a-4bdd-8b5d-357351346e31&autoAuth=true", duration: 10000, reloadInterval: 60000 },
+            { url: "https://app.powerbi.com/reportEmbed?reportId=ffea0027-e45f-4c95-b157-1ed51be5945e&autoAuth=true", duration: 10000, reloadInterval: 60000 },
+            { url: "https://app.powerbi.com/reportEmbed?reportId=6c47f7e1-d6de-4649-858f-c2729343a0fa&autoAuth=true", duration: 10000, reloadInterval: 60000 },
+            { url: "https://app.powerbi.com/reportEmbed?reportId=b6665093-65b2-4d1d-a0f2-d720c9a1fd3f&autoAuth=true", duration: 10000, reloadInterval: 600000 },
+            { url: "https://tim-brass.github.io/Cut-Off/", duration: 15000, reloadInterval: 60000 }
+        ];
+
+        let tabWindows = [];
+        let currentIndex = 0;
+        let popupsBlocked = false;
+
+        function openTabs() {
+            document.documentElement.requestFullscreen().catch(err => console.log("⚠️ Fullscreen niet toegestaan:", err));
+            console.log("📢 Tabs worden geopend...");
+
+            websites.forEach((site, index) => {
+                setTimeout(() => { 
+                    let newTab = window.open(site.url, "_blank");
+
+                    if (newTab) {
+                        tabWindows.push({ tab: newTab, ...site });
+                        console.log(`✅ Tab geopend: ${site.url}`);
+                    } else {
+                        popupsBlocked = true;
+                        console.log(`🚨 Pop-up geblokkeerd: ${site.url}`);
+                    }
+
+                    if (tabWindows.length === websites.length) {
+                        if (!popupsBlocked) {
+                            console.log("✅ Alle tabbladen geopend. Start rotatie...");
+                            setTimeout(rotateTabs, websites[0].duration);
+                        } else {
+                            alert("⚠️ Pop-ups zijn geblokkeerd! Sta pop-ups toe in je browserinstellingen en probeer opnieuw.");
+                        }
+                    }
+                }, index * 500);
+            });
+        }
+
+        function rotateTabs() {
+            if (tabWindows.length === 0) {
+                console.log("❌ Geen tabbladen om te roteren.");
+                return;
+            }
+
+            let activeTab = tabWindows[currentIndex];
+
+            if (activeTab.tab.closed) {
+                alert("🚨 Een tabblad is gesloten! Start opnieuw.");
+                console.log(`🚨 Gesloten tab gedetecteerd: ${activeTab.url}`);
+                return;
+            }
+
+            setTimeout(() => { 
+                activeTab.tab.focus();
+                console.log(`🔄 Wisselen naar tab: ${activeTab.url}`);
+            }, 100);
+
+            if (activeTab.reloadInterval) {
+                setTimeout(() => {
+                    console.log(`🔃 Herladen: ${activeTab.url}`);
+                    activeTab.tab.location.reload();
+                }, activeTab.reloadInterval);
+            }
+
+            currentIndex = (currentIndex + 1) % tabWindows.length;
+            setTimeout(rotateTabs, tabWindows[currentIndex].duration);
+        }
+
+        document.getElementById("startBtn").addEventListener("click", openTabs);
+    </script>
+</head>
+<body>
+    <h1>Automatische Tab Rotator (Edge & Chrome Fix)</h1>
+    <button id="startBtn">Start Rotatie</button>
+    <p>Klik op "Start Rotatie" om te beginnen.</p>
+</body>
+</html>
