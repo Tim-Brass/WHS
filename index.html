@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power BI Rotator</title>
+    <script>
+        const websites = [
+            { url: "https://app.powerbi.com/reportEmbed?reportId=2c6fa881-b706-42af-8080-3a569e49eec5&autoAuth=true&ctid=b945c813-dce6-41f8-8457-5a12c2fe15bf&navContentPaneEnabled=false", duration: 15000 },
+            { url: "https://app.powerbi.com/reportEmbed?reportId=741b15b7-9bdd-4523-83d0-b3dac821b038&autoAuth=true&ctid=b945c813-dce6-41f8-8457-5a12c2fe15bf&navContentPaneEnabled=false", duration: 10000 },
+            { url: "https://app.powerbi.com/reportEmbed?reportId=98193132-883a-4bdd-8b5d-357351346e31&autoAuth=true&ctid=b945c813-dce6-41f8-8457-5a12c2fe15bf&navContentPaneEnabled=false", duration: 10000 },
+            { url: "https://app.powerbi.com/reportEmbed?reportId=ffea0027-e45f-4c95-b157-1ed51be5945e&autoAuth=true&ctid=b945c813-dce6-41f8-8457-5a12c2fe15bf&navContentPaneEnabled=false", duration: 10000 },
+            { url: "https://app.powerbi.com/reportEmbed?reportId=6c47f7e1-d6de-4649-858f-c2729343a0fa&autoAuth=true&ctid=b945c813-dce6-41f8-8457-5a12c2fe15bf&navContentPaneEnabled=false", duration: 10000 },
+            { url: "https://app.powerbi.com/reportEmbed?reportId=b6665093-65b2-4d1d-a0f2-d720c9a1fd3f&autoAuth=true&ctid=b945c813-dce6-41f8-8457-5a12c2fe15bf&navContentPaneEnabled=false", duration: 10000 },
+            { url: "https://tim-brass.github.io/Cut-Off", duration: 15000 }
+        ];
+
+        let currentIndex = 0;
+        let iframe;
+
+        function startRotation() {
+            iframe = document.getElementById("iframeRotator");
+            switchToNextWebsite();
+            setTimeout(() => enterFullscreen(), 2000);
+        }
+
+        function switchToNextWebsite() {
+            let currentWebsite = websites[currentIndex];
+            iframe.src = currentWebsite.url;
+
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % websites.length;
+                switchToNextWebsite();
+            }, currentWebsite.duration);
+        }
+
+        function enterFullscreen() {
+            let elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+
+        function adjustIframe() {
+            let iframe = document.getElementById("iframeRotator");
+            iframe.style.height = window.innerHeight + "px";
+        }
+
+        window.onload = startRotation;
+        window.onresize = adjustIframe;
+
+    </script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: black;
+            height: 100%;
+            width: 100%;
+        }
+
+        iframe {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="iframeRotator" src="about:blank"></iframe>
+</body>
+</html>
