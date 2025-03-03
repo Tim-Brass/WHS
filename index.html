@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tab Rotator - Edge & Chrome Fix</title>
+    <title>Tab Rotator - Debug Mode</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,13 +18,8 @@
     </style>
     <script>
         let websites = [
-            { url: "https://app.powerbi.com/reportEmbed?reportId=2c6fa881-b706-42af-8080-3a569e49eec5&autoAuth=true", duration: 15000, reloadInterval: 60000 },
-            { url: "https://app.powerbi.com/reportEmbed?reportId=741b15b7-9bdd-4523-83d0-b3dac821b038&autoAuth=true", duration: 10000, reloadInterval: 60000 },
-            { url: "https://app.powerbi.com/reportEmbed?reportId=98193132-883a-4bdd-8b5d-357351346e31&autoAuth=true", duration: 10000, reloadInterval: 60000 },
-            { url: "https://app.powerbi.com/reportEmbed?reportId=ffea0027-e45f-4c95-b157-1ed51be5945e&autoAuth=true", duration: 10000, reloadInterval: 60000 },
-            { url: "https://app.powerbi.com/reportEmbed?reportId=6c47f7e1-d6de-4649-858f-c2729343a0fa&autoAuth=true", duration: 10000, reloadInterval: 60000 },
-            { url: "https://app.powerbi.com/reportEmbed?reportId=b6665093-65b2-4d1d-a0f2-d720c9a1fd3f&autoAuth=true", duration: 10000, reloadInterval: 600000 },
-            { url: "https://tim-brass.github.io/Cut-Off/", duration: 15000, reloadInterval: 60000 }
+            { url: "https://www.example.com", duration: 5000, reloadInterval: 10000 },
+            { url: "https://www.wikipedia.org", duration: 5000, reloadInterval: 10000 }
         ];
 
         let tabWindows = [];
@@ -32,13 +27,13 @@
         let popupsBlocked = false;
 
         function openTabs() {
+            console.log("📢 Proberen tabs te openen...");
             document.documentElement.requestFullscreen().catch(err => console.log("⚠️ Fullscreen niet toegestaan:", err));
-            console.log("📢 Tabs worden geopend...");
 
             websites.forEach((site, index) => {
-                setTimeout(() => { 
+                setTimeout(() => {
                     let newTab = window.open(site.url, "_blank");
-
+                    
                     if (newTab) {
                         tabWindows.push({ tab: newTab, ...site });
                         console.log(`✅ Tab geopend: ${site.url}`);
@@ -49,10 +44,10 @@
 
                     if (tabWindows.length === websites.length) {
                         if (!popupsBlocked) {
-                            console.log("✅ Alle tabbladen geopend. Start rotatie...");
+                            console.log("✅ Alle tabs geopend, start rotatie...");
                             setTimeout(rotateTabs, websites[0].duration);
                         } else {
-                            alert("⚠️ Pop-ups zijn geblokkeerd! Sta pop-ups toe in je browserinstellingen en probeer opnieuw.");
+                            alert("⚠️ Pop-ups geblokkeerd! Sta pop-ups toe en probeer opnieuw.");
                         }
                     }
                 }, index * 500);
@@ -69,11 +64,11 @@
 
             if (activeTab.tab.closed) {
                 alert("🚨 Een tabblad is gesloten! Start opnieuw.");
-                console.log(`🚨 Gesloten tab gedetecteerd: ${activeTab.url}`);
+                console.log(`🚨 Gesloten tab: ${activeTab.url}`);
                 return;
             }
 
-            setTimeout(() => { 
+            setTimeout(() => {
                 activeTab.tab.focus();
                 console.log(`🔄 Wisselen naar tab: ${activeTab.url}`);
             }, 100);
@@ -93,7 +88,7 @@
     </script>
 </head>
 <body>
-    <h1>Automatische Tab Rotator (Edge & Chrome Fix)</h1>
+    <h1>Tab Rotator - Debug Mode</h1>
     <button id="startBtn">Start Rotatie</button>
     <p>Klik op "Start Rotatie" om te beginnen.</p>
 </body>
